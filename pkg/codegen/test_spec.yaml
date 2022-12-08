@@ -172,3 +172,6 @@ components:
         dogBreakfastTreat:
           type: string
           x-dynamodb: full
+        dogLunchTreat:
+          type: string
+          x-dynamodb: "-"

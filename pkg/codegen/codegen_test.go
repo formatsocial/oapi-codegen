@@ -192,6 +192,7 @@ type GetTestByNameResponse struct {
 	assert.Contains(t, code, "DogDob            *string `dynamodbav:\"dogDob,omitempty\" json:\"dogDob,omitempty\"`")
 	assert.Contains(t, code, "DogName           string  `dynamodbav:\"dogName\" json:\"dogName\"`")
 	assert.Contains(t, code, "DogBreakfastTreat *string `dynamodbav:\"dogBreakfastTreat\" json:\"dogBreakfastTreat,omitempty\"`")
+	assert.Contains(t, code, "DogLunchTreat     *string `dynamodbav:\"-\" json:\"dogLunchTreat,omitempty\"`")
 	// Make sure the generated code is valid:
 	checkLint(t, "test.gen.go", []byte(code))
 }
