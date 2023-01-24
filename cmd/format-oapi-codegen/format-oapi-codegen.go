@@ -203,6 +203,11 @@ func main() {
 		if err != nil {
 			errExit("error processing flags: %v\n", err)
 		}
+		templates, err := loadTemplateOverrides(opts.OutputOptions.TemplateDir)
+		if err != nil {
+			errExit("error loading template overrides: %s\n", err)
+		}
+		opts.OutputOptions.UserTemplates = templates
 	} else {
 		var oldConfig oldConfiguration
 		if flagConfigFile != "" {
@@ -311,9 +316,6 @@ func updateConfigFromFlags(cfg configuration) (configuration, error) {
 	}
 	if flagExcludeTags != "" {
 		unsupportedFlags = append(unsupportedFlags, "--exclude-tags")
-	}
-	if flagTemplatesDir != "" {
-		unsupportedFlags = append(unsupportedFlags, "--templates")
 	}
 	if flagImportMapping != "" {
 		unsupportedFlags = append(unsupportedFlags, "--import-mapping")
