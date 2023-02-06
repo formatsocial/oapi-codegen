@@ -15,7 +15,13 @@
             {{if $multipleBodies}}{{.NameTag}}{{end}}Body {{if eq .NameTag "Multipart"}}*multipart.Reader{{else if ne .NameTag ""}}*{{$opid}}{{.NameTag}}RequestBody{{else}}io.Reader{{end}}
         {{end -}}
     }
-
+    
+    {{range .PathParams -}}
+          func (requestObj  {{$opid | ucFirst}}RequestObject) Get{{.GoName | ucFirst}}()  {{.TypeDef}} {
+              return requestObj.{{.GoName | ucFirst}}
+          }
+    {{end -}}
+    
     type {{$opid | ucFirst}}ResponseObject interface {
         Visit{{$opid}}Response(w http.ResponseWriter) error
     }
@@ -38,7 +44,7 @@
 
         {{range .Contents}}
             {{if and $fixedStatusCode $isRef -}}
-                type {{$opid}}{{$statusCode}}{{.NameTagOrContentType}}Response = {{$ref}}{{.NameTagOrContentType}}Response
+                type {{$opid}}{{$statusCode}}{{.NameTagOrContentType}}Response {{$ref}}{{.NameTagOrContentType}}Response
             {{else if and (not $hasHeaders) ($fixedStatusCode) (.IsSupported) -}}
                 type {{$opid}}{{$statusCode}}{{.NameTagOrContentType}}Response {{if eq .NameTag "Multipart"}}func(writer *multipart.Writer)error{{else if .IsSupported}}{{if .Schema.IsRef}}={{end}} {{.Schema.TypeDecl}}{{else}}io.Reader{{end}}
             {{else -}}
@@ -104,7 +110,7 @@
 
         {{if eq 0 (len .Contents) -}}
             {{if and $fixedStatusCode $isRef -}}
-                type {{$opid}}{{$statusCode}}Response = {{$ref}}Response
+                type {{$opid}}{{$statusCode}}Response {{$ref}}Response
             {{else -}}
                 type {{$opid}}{{$statusCode}}Response struct {
                     {{if $hasHeaders -}}
