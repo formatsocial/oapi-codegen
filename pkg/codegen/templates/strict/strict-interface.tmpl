@@ -44,7 +44,7 @@
 
         {{range .Contents}}
             {{if and $fixedStatusCode $isRef -}}
-                type {{$opid}}{{$statusCode}}{{.NameTagOrContentType}}Response {{$ref}}{{.NameTagOrContentType}}Response
+                type {{$opid}}{{$statusCode}}{{.NameTagOrContentType}}Response = {{$ref}}{{.NameTagOrContentType}}Response
             {{else if and (not $hasHeaders) ($fixedStatusCode) (.IsSupported) -}}
                 type {{$opid}}{{$statusCode}}{{.NameTagOrContentType}}Response {{if eq .NameTag "Multipart"}}func(writer *multipart.Writer)error{{else if .IsSupported}}{{if .Schema.IsRef}}={{end}} {{.Schema.TypeDecl}}{{else}}io.Reader{{end}}
             {{else -}}
@@ -110,7 +110,7 @@
 
         {{if eq 0 (len .Contents) -}}
             {{if and $fixedStatusCode $isRef -}}
-                type {{$opid}}{{$statusCode}}Response {{$ref}}Response
+                type {{$opid}}{{$statusCode}}Response = {{$ref}}Response
             {{else -}}
                 type {{$opid}}{{$statusCode}}Response struct {
                     {{if $hasHeaders -}}
